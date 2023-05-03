@@ -15,7 +15,8 @@ from summarizer import Summarizer
 
 def main():
     args = docopt(__doc__)
-    Summarizer.summarize(args['<arquivo_excel>'], target_year=args.get('--ano'))
+    target_year = int(args['--ano']) if args.get('--ano') else None
+    Summarizer.summarize(args['<arquivo_excel>'], target_year=target_year)
 
 if __name__ == '__main__':
     main()
