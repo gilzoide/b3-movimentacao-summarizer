@@ -9,6 +9,7 @@ Options:
     -v, --verbose            Mostra todas as transações
 """
 import logging
+import sys
 
 from docopt import docopt
 
@@ -18,6 +19,7 @@ from summarizer import Summarizer
 def main():
     args = docopt(__doc__)
     logging.basicConfig(format='%(message)s',
+                        stream=sys.stdout,
                         level=logging.DEBUG if args.get('--verbose') else logging.INFO)
     target_year = int(args['--ano']) if args.get('--ano') else None
     Summarizer.summarize(args['<arquivo_excel>'], target_year=target_year)

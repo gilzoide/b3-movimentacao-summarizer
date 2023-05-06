@@ -55,7 +55,7 @@ class Stock:
         self.mean_price = previous_total_price / final_quantity
 
     def __str__(self) -> str:
-        return f"{self.name} (quantidade: {self.quantity}, preço médio: {locale.currency(self.mean_price)})"
+        return f"{self.name:<6} | quantidade: {self.quantity:<6} | preço médio: {locale.currency(self.mean_price):>10} | preço total: {locale.currency(self.quantity * self.mean_price):>12}"
 
     def __bool__(self) -> bool:
         return self.quantity > 0
