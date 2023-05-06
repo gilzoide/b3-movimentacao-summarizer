@@ -88,6 +88,10 @@ class MovimentacaoExcel:
             return self.type == 'Transferência - Liquidação' and self.is_debit
 
         @property
+        def is_transfer(self) -> bool:
+            return self.type == 'Transferência' and self.is_credit
+
+        @property
         def is_split(self) -> bool:
             return self.type == 'Desdobro'
 

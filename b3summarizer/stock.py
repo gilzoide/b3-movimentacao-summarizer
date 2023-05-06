@@ -37,6 +37,10 @@ class Stock:
         sell_price = sell_price_per_unit * quantity
         return sell_price - buy_price
 
+    def transfer(self, quantity: int):
+        """Transferência de ações, não impactam preço médio"""
+        self.quantity += quantity
+
     def split(self, quantity_added: int):
         """Desdobro de ações"""
         self.buy(quantity_added, price_per_unit=0)
@@ -80,6 +84,12 @@ class StockMap:
         if stock not in self.stocks:
             raise StockException(f"Ação {stock} não consta no inventário")
         return self.stocks[stock].sell(quantity, sell_price_per_unit)
+
+    def transfer(self, stock, quantity: int):
+        """Transferência de ações, não impactam preço médio"""
+        if stock not in self.stocks:
+            self.stocks[stock] = Stock(stock)
+        self.stocks[stock].transfer(quantity)
 
     def split(self, stock, quantity_added: int):
         """Desdobro de ações"""

@@ -1,8 +1,6 @@
 import locale
+import logging
 from typing import Sequence
-import warnings
-
-import pandas as pd
 
 from movimentacao_excel import MovimentacaoExcel
 from stock import StockMap
@@ -54,15 +52,23 @@ class Summarizer:
 
             if row.is_buy:
                 stock_map.buy(row.stock, row.quantity, row.unit_price)
+                logging.debug(f'  > ({date.date()}) COMPRA {row.stock}, {row.quantity}, {locale.currency(row.unit_price)}')
             elif row.is_sell:
                 result = stock_map.sell(row.stock, row.quantity, row.unit_price)
                 month_results.add_result(result)
+                logging.debug(f'  > ({date.date()}) VENDA {row.stock}, {row.quantity}, {locale.currency(row.unit_price)}')
+            elif row.is_transfer:
+                stock_map.transfer(row.stock, row.quantity)
+                logging.debug(f'  > ({date.date()}) TRANSFERÊNCIA {row.stock}, {row.quantity}')
             elif row.is_split:
                 stock_map.split(row.stock, row.quantity)
+                logging.debug(f'  > ({date.date()}) DESDOBRO {row.stock}, {row.quantity}')
             elif row.is_combine:
                 stock_map.combine(row.stock, row.quantity)
+                logging.debug(f'  > ({date.date()}) GRUPAMENTO {row.stock}, {row.quantity}')
             elif row.is_bonus:
                 stock_map.buy(row.stock, row.quantity, row.unit_price)
+                logging.debug(f'  > ({date.date()}) BÔNUS {row.stock}, {row.quantity}, {locale.currency(row.unit_price)}')
 
         if is_target_year(current_year):
             self.summarize_month(current_year, current_month, month_results)
@@ -73,18 +79,18 @@ class Summarizer:
         if results.result == 0:
             return
 
-        print(f"[{year}-{month:02}] Resultado: {locale.currency(results.result)}")
+        logging.info(f"[{year}-{month:02}] Resultado: {locale.currency(results.result)}")
 
     @staticmethod
     def summarize_year(year: int, stock_map: StockMap):
         if not stock_map:
             return
 
-        print(f"[{year}] Posição:")
+        logging.info(f"[{year}] Posição:")
         for (_, stock) in sorted(stock_map.stocks.items()):
             if stock:
-                print(f"  {stock}")
-        print()
+                logging.info(f"  {stock}")
+        logging.info('')
 
     @staticmethod
     def summarize(excel_filenames: Sequence, target_year: int | None = None):
