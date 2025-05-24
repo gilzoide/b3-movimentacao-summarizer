@@ -94,7 +94,7 @@ class Summarizer:
 
     @staticmethod
     def summarize(excel_filenames: Sequence, target_year: int | None = None):
-        locale.setlocale(locale.LC_ALL, 'pt_BR.utf8')
+        locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')
         summarizer = Summarizer(*excel_filenames)
         summarizer.print_summarization(target_year=target_year)
 
